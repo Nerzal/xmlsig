@@ -19,6 +19,7 @@ type Signer interface {
 	Sign([]byte) (string, error)
 	CreateSignature(interface{}) (*Signature, error)
 	Algorithm() string
+	CreateBinarySecurityToken() *BinarySecurityToken
 }
 
 type signer struct {
@@ -177,7 +178,7 @@ const (
 	binaryValueTypeMultiple = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509PKIPathv1"
 )
 
-func (s *signer) CreateBinarySecurityToken() (*BinarySecurityToken, error) {
+func (s *signer) CreateBinarySecurityToken() *BinarySecurityToken {
 	base64string := base64.StdEncoding.EncodeToString([]byte(s.cert))
 	result := &BinarySecurityToken{
 		Value:        base64string,
@@ -185,5 +186,5 @@ func (s *signer) CreateBinarySecurityToken() (*BinarySecurityToken, error) {
 		ValueType:    binaryValueTypeMultiple,
 		ID:           "binarytoken",
 	}
-	return result, nil
+	return result
 }
